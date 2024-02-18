@@ -1,0 +1,8 @@
+secretGenerator:
+- name: mysql-pass
+  literals:
+  - password=Letmein2021!
+resources:
+  - mysql-deployment.yaml
+  - wordpress-deployment.yaml
+  - wordpress-ingress.yaml
