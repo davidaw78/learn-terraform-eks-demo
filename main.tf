@@ -381,7 +381,7 @@ resource "aws_iam_role" "terraform-eks-nodes-role" {
 }
 
 resource "aws_iam_policy" "policy-ec2" {
-  name = "var.cluster-name-policy-ec2"
+  name = "${var.cluster-name}-policy-ec2"
 
   policy = jsonencode({
     Version = "2012-10-17"
