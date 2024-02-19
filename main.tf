@@ -1,3 +1,7 @@
+#https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#built-in-node-labels
+# This could help me control which pod goes to which node and you can use 492 to match
+# nodeSelector:
+#    subnet: backend
 # Added private subnet db and app into one node.
 provider "aws" {
   region = var.region
