@@ -1,14 +1,13 @@
 provider "aws" {
   region = var.region
-  alias = "account_route53" # Specific to your setup
-  version = ">= 3.4.0"
+
 }
 
 terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
     kubectl = {
       source  = "gavinbunney/kubectl"
