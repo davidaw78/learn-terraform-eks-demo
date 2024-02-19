@@ -521,8 +521,8 @@ variable "demo_dns_name" {
 
 resource "aws_alb" "mylb" {
   # Normal ALB content, options removed for BLOG
-  subnets         = module.vpc.public_subnets
-  security_groups = [aws_security_group.myapp.id]
+  subnets         = var.public-subnet-cidr-blocks
+  security_groups = [aws_security_group.terraform-eks-public-facing-sg.id]
 }
 
 # Basic https lisener to demo HTTPS certiciate
