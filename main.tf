@@ -520,8 +520,8 @@ variable "demo_dns_name" {
 }
 
 resource "aws_alb" "mylb" {
-  # Normal ALB content, options removed for BLOG
-  subnets         = aws_subnet.terraform-eks-public-subnet
+  count           = length(var.public-subnet-cidr-blocks)
+  subnets         = aws_subnet.terraform-eks-public-subnet[count.index]
   security_groups = [aws_security_group.terraform-eks-public-facing-sg.id]
 }
 
