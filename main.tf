@@ -1,3 +1,4 @@
+# 2 nodes but cannot control which one goes to which node
 provider "aws" {
   region = var.region
 }
