@@ -30,13 +30,13 @@ variable "public-subnet-cidr-blocks" {
 
 variable "private-subnet-cidr-blocks-app" {
   type        = list(string)
-  default     = ["10.0.3.0/24"]
+  default     = ["10.0.3.0/24", "10.0.4.0/24"]
   description = "CIDR block range for private subnet"
 }
 
 variable "private-subnet-cidr-blocks-db" {
   type        = list(string)
-  default     = ["10.0.5.0/24"]
+  default     = ["10.0.5.0/24", "10.0.6.0/24"]
   description = "CIDR block range for private subnet"
 }
 
@@ -241,15 +241,13 @@ resource "aws_route_table_association" "terraform-eks-public-subnet-rta" {
 
 resource "aws_route_table_association" "terraform-eks-private-subnet-app-rta" {
   count = length(var.availability-zones)
-  subnet_id      = aws_subnet.terraform-eks-private-subnet-app.id
-#  subnet_id      = aws_subnet.terraform-eks-private-subnet-app[count.index].id
+  subnet_id      = aws_subnet.terraform-eks-private-subnet-app[count.index].id
   route_table_id = aws_route_table.terraform-eks-private-app-rt.id
 }
 
 resource "aws_route_table_association" "terraform-eks-private-subnet-db-rta" {
   count = length(var.availability-zones)
-  subnet_id      = aws_subnet.terraform-eks-private-subnet-db.id
-#  subnet_id      = aws_subnet.terraform-eks-private-subnet-db[count.index].id
+  subnet_id      = aws_subnet.terraform-eks-private-subnet-db[count.index].id
   route_table_id = aws_route_table.terraform-eks-private-db-rt.id
 }
 
