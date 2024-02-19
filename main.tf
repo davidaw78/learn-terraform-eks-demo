@@ -28,9 +28,15 @@ variable "public-subnet-cidr-blocks" {
   description = "CIDR block range for public subnet"
 }
 
-variable "private-subnet-cidr-blocks" {
+variable "private-subnet-cidr-blocks-app" {
   type        = list(string)
   default     = ["10.0.3.0/24", "10.0.4.0/24"]
+  description = "CIDR block range for private subnet"
+}
+
+variable "private-subnet-cidr-blocks-db" {
+  type        = list(string)
+  default     = ["10.0.5.0/24", "10.0.6.0/24"]
   description = "CIDR block range for private subnet"
 }
 
@@ -160,10 +166,23 @@ resource "aws_subnet" "terraform-eks-public-subnet" {
   }
 }
 
-resource "aws_subnet" "terraform-eks-private-subnet" {
-  count             = length(var.private-subnet-cidr-blocks)
+resource "aws_subnet" "terraform-eks-private-subnet-app" {
+  count             = length(var.private-subnet-cidr-blocks-app)
   vpc_id            = aws_vpc.terraform-eks-vpc.id
-  cidr_block        = var.private-subnet-cidr-blocks[count.index]
+  cidr_block        = var.private-subnet-cidr-blocks-app[count.index]
+  availability_zone = var.availability-zones[count.index]
+
+  tags = {
+    Name = "${var.cluster-name}-private-subnet"
+    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/${var.cluster-name}" = "owned"
+  }
+}
+
+resource "aws_subnet" "terraform-eks-private-subnet-db" {
+  count             = length(var.private-subnet-cidr-blocks-db)
+  vpc_id            = aws_vpc.terraform-eks-vpc.id
+  cidr_block        = var.private-subnet-cidr-blocks-db[count.index]
   availability_zone = var.availability-zones[count.index]
 
   tags = {
@@ -274,7 +293,7 @@ resource "aws_security_group" "terraform-eks-public-facing-sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "tcp"
-    cidr_blocks = flatten([var.private-subnet-cidr-blocks, var.public-subnet-cidr-blocks])
+    cidr_blocks = flatten([var.private-subnet-cidr-blocks-app, var.private-subnet-cidr-blocks-db, var.public-subnet-cidr-blocks])
     # Allow traffic from public subnet
   }
 
@@ -299,7 +318,7 @@ resource "aws_security_group" "terraform-eks-private-facing-sg" {
     from_port   = 0
     to_port     = 0
     protocol  = "-1"
-    cidr_blocks = flatten(var.private-subnet-cidr-blocks)
+    cidr_blocks = flatten(var.private-subnet-cidr-blocks-app, var.private-subnet-cidr-blocks-db)
     # Allow traffic from private subnets
   }
 
