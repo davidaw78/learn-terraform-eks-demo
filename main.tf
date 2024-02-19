@@ -519,6 +519,45 @@ variable "demo_dns_name" {
   default     = "ssldemo"
 }
 
+resource "aws_alb" "mylb" {
+  # Normal ALB content, options removed for BLOG
+  subnets         = module.vpc.public_subnets
+  security_groups = [aws_security_group.myapp.id]
+}
+
+# Basic https lisener to demo HTTPS certiciate
+resource "aws_alb_listener" "mylb_https" {
+  load_balancer_arn = aws_alb.mylb.arn
+  certificate_arn   = aws_acm_certificate_validation.cert.certificate_arn
+  port              = "443"
+  protocol          = "HTTPS"
+  # Default action, and other paramters removed for BLOG
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = "<html><body><h1>Hello World!</h1><p>This would usually be to a target group of web servers.. but this is just a demo to returning a fixed response\n\n</p></body></html>"
+      status_code  = "200"
+    }
+  }
+}
+
+# Always good practice to redirect http to https
+resource "aws_alb_listener" "mylb_http" {
+  load_balancer_arn = aws_alb.mylb.arn
+  port              = "80"
+  protocol          = "HTTP"
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
 # This data source looks up the public DNS zone
 data "aws_route53_zone" "public" {
   name         = var.demo_dns_zone
