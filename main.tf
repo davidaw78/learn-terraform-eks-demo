@@ -173,7 +173,7 @@ resource "aws_subnet" "terraform-eks-private-subnet-app" {
   availability_zone = var.availability-zones[count.index]
 
   tags = {
-    Name = "${var.cluster-name}-private-subnet"
+    Name = "${var.cluster-name}-private-subnet-app"
     "kubernetes.io/role/internal-elb" = "1"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
@@ -186,14 +186,14 @@ resource "aws_subnet" "terraform-eks-private-subnet-db" {
   availability_zone = var.availability-zones[count.index]
 
   tags = {
-    Name = "${var.cluster-name}-private-subnet"
+    Name = "${var.cluster-name}-private-subnet-db"
     "kubernetes.io/role/internal-elb" = "1"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
 }
 
 # Setup route table and association
-resource "aws_route_table" "terraform-eks-private-rt" {
+resource "aws_route_table" "terraform-eks-private-app-rt" {
   vpc_id = aws_vpc.terraform-eks-vpc.id
 
   route {
@@ -202,9 +202,23 @@ resource "aws_route_table" "terraform-eks-private-rt" {
   }
 
   tags = {
-    Name = "${var.cluster-name}-private-rt"
+    Name = "${var.cluster-name}-private-app-rt"
   }
 }
+
+resource "aws_route_table" "terraform-eks-private-db-rt" {
+  vpc_id = aws_vpc.terraform-eks-vpc.id
+
+  route {
+      cidr_block                 = "0.0.0.0/0"
+      nat_gateway_id             = aws_nat_gateway.terraform-eks-nat.id
+  }
+
+  tags = {
+    Name = "${var.cluster-name}-private-db-rt"
+  }
+}
+
 
 resource "aws_route_table" "terraform-eks-public-rt" {
   vpc_id = aws_vpc.terraform-eks-vpc.id
@@ -228,13 +242,13 @@ resource "aws_route_table_association" "terraform-eks-public-subnet-rta" {
 resource "aws_route_table_association" "terraform-eks-private-subnet-app-rta" {
   count = length(var.availability-zones)
   subnet_id      = aws_subnet.terraform-eks-private-subnet-app[count.index].id
-  route_table_id = aws_route_table.terraform-eks-private-rt.id
+  route_table_id = aws_route_table.terraform-eks-private-app-rt.id
 }
 
 resource "aws_route_table_association" "terraform-eks-private-subnet-db-rta" {
   count = length(var.availability-zones)
   subnet_id      = aws_subnet.terraform-eks-private-subnet-db[count.index].id
-  route_table_id = aws_route_table.terraform-eks-private-rt.id
+  route_table_id = aws_route_table.terraform-eks-private-db-rt.id
 }
 
 # Setup AWS IAM Role for cluster
