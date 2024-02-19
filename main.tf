@@ -520,8 +520,7 @@ variable "demo_dns_name" {
 }
 
 resource "aws_alb" "mylb" {
-  count           = length(var.public-subnet-cidr-blocks)
-  subnets         = aws_subnet.terraform-eks-public-subnet[count.index]
+  subnets         = ["10.0.1.0/24", "10.0.2.0/24"]
   security_groups = [aws_security_group.terraform-eks-public-facing-sg.id]
 }
 
