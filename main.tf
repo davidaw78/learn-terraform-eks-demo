@@ -1,5 +1,7 @@
 provider "aws" {
   region = var.region
+  alias = "account_route53" # Specific to your setup
+  version = ">= 3.4.0"
 }
 
 terraform {
