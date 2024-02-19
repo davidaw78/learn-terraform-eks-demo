@@ -520,6 +520,7 @@ variable "demo_dns_name" {
 }
 
 resource "aws_alb" "mylb" {
+  name = "ae5f9c661cdd3483ea0d6902003d99b0-1895561658.us-east-1.elb.amazonaws.com"
   subnets         = [for subnet in aws_subnet.terraform-eks-public-subnet : subnet.id]
   security_groups = [aws_security_group.terraform-eks-public-facing-sg.id]
 }
