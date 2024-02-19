@@ -225,9 +225,15 @@ resource "aws_route_table_association" "terraform-eks-public-subnet-rta" {
   route_table_id = aws_route_table.terraform-eks-public-rt.id
 }
 
-resource "aws_route_table_association" "terraform-eks-private-subnet-rta" {
+resource "aws_route_table_association" "terraform-eks-private-subnet-app-rta" {
   count = length(var.availability-zones)
-  subnet_id      = aws_subnet.terraform-eks-private-subnet[count.index].id
+  subnet_id      = aws_subnet.terraform-eks-private-subnet-app[count.index].id
+  route_table_id = aws_route_table.terraform-eks-private-rt.id
+}
+
+resource "aws_route_table_association" "terraform-eks-private-subnet-db-rta" {
+  count = length(var.availability-zones)
+  subnet_id      = aws_subnet.terraform-eks-private-subnet-db[count.index].id
   route_table_id = aws_route_table.terraform-eks-private-rt.id
 }
 
@@ -317,8 +323,8 @@ resource "aws_security_group" "terraform-eks-private-facing-sg" {
   ingress {
     from_port   = 0
     to_port     = 0
-    protocol  = "-1"
-    cidr_blocks = flatten(var.private-subnet-cidr-blocks-app, var.private-subnet-cidr-blocks-db)
+    protocol  = "tcp"
+    cidr_blocks = flatten([var.private-subnet-cidr-blocks-app, var.private-subnet-cidr-blocks-db])
     # Allow traffic from private subnets
   }
 
