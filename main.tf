@@ -1,3 +1,4 @@
+# Added private subnet db and app into one node.
 provider "aws" {
   region = var.region
 }
