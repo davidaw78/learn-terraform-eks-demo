@@ -547,6 +547,7 @@ resource "aws_eks_node_group" "private-nodes-db" {
   ]
 }
 
+# You don't need this but putting here for reference
 locals {
   demo-node-userdata = <<USERDATA
 MIME-Version: 1.0
@@ -571,7 +572,6 @@ USERDATA
 
 resource "aws_launch_template" "terraform-eks-demo" {
   name = "eks-with-disks"
-#  user_data = "${base64encode(local.demo-node-userdata)}"
 
   block_device_mappings {
     device_name = "/dev/xvdb"
