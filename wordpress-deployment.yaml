@@ -43,6 +43,8 @@ spec:
         app: wordpress
         tier: frontend
     spec:
+      nodeSelector:
+        role: frontend
       containers:
       - image: wordpress:6.2.1-apache
         name: wordpress
