@@ -42,6 +42,8 @@ spec:
         app: wordpress
         tier: mysql
     spec:
+      nodeSelector:
+        tier: mysql
       containers:
       - image: mysql:8.0
         name: mysql
