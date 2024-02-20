@@ -403,7 +403,7 @@ output "kubeconfig" {
 
 # Setup Nodes
 resource "aws_iam_role" "terraform-eks-nodes-role" {
-  name = "${var-cluster-name}-eks-group-nodes-role"
+  name = "${var.cluster-name}-eks-group-nodes-role"
   managed_policy_arns = [aws_iam_policy.policy-ec2.arn]
 
   assume_role_policy = jsonencode({
