@@ -493,7 +493,6 @@ resource "aws_eks_node_group" "private-nodes-app" {
   tags = {
     Name = "${var.cluster-name}-eks-cluster-node-app"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
-    Who = "Me"
   }
 
   depends_on = [
