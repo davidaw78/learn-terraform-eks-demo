@@ -1,4 +1,4 @@
-# 2 nodes but cannot control which one goes to which node
+# Now can control which deployment goes to which tier. Through spec > selector > tier=mysql
 provider "aws" {
   region = var.region
 }
