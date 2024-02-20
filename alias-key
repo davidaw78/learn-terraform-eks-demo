@@ -1,0 +1,5 @@
+alias tfa="terraform apply --auto-approve"
+alias tfd="terraform destroy --auto-approve"
+alias fmt="terraform fmt;terraform validate"
+alias ktl="kubectl"
+alias tfm="terraform"
