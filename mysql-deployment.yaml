@@ -19,8 +19,6 @@ metadata:
   labels:
     app: wordpress
 spec:
-  nodeSelector:
-    role: frontend
   accessModes:
     - ReadWriteOnce
   resources:
