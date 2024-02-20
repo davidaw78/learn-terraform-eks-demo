@@ -9,7 +9,7 @@ spec:
     - port: 3306
   selector:
     app: wordpress
-    tier: frontend
+    tier: mysql
   clusterIP: None
 ---
 apiVersion: v1
@@ -35,13 +35,15 @@ spec:
   selector:
     matchLabels:
       app: wordpress
-      tier: frontend
+      tier: mysql
   template:
     metadata:
       labels:
         app: wordpress
         tier: mysql
     spec:
+      nodeSelector:
+        tier: frontend
       containers:
       - image: mysql:8.0
         name: mysql
