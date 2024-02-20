@@ -528,7 +528,7 @@ resource "aws_eks_node_group" "private-nodes-db" {
   }
 
   labels = {
-    tier = "backend"
+    tier = "mysql"
   }
 
   launch_template {
