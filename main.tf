@@ -1,8 +1,4 @@
-#https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#built-in-node-labels
-# This could help me control which pod goes to which node and you can use 492 to match
-# nodeSelector:
-#    subnet: backend
-# Added private subnet db and app into one node.
+# 2 nodes but cannot control which one goes to which node
 provider "aws" {
   region = var.region
 }
@@ -71,7 +67,7 @@ variable "disk_size" {
 
 variable "pvt_desired_size" {
   description = "Desired # of nodes in private subnet"
-  default = 2
+  default = 1
   type = number
 }
 
@@ -83,7 +79,7 @@ variable "pvt_max_size" {
 
 variable "pvt_min_size" {
   description = "Minimum # of nodes in private subnet."
-  default = 2
+  default = 1
   type = number
 }
 
@@ -407,7 +403,7 @@ output "kubeconfig" {
 
 # Setup Nodes
 resource "aws_iam_role" "terraform-eks-nodes-role" {
-  name = "${var.cluster-name}-eks-node-group-nodes"
+  name = "eks-node-group-nodes"
   managed_policy_arns = [aws_iam_policy.policy-ec2.arn]
 
   assume_role_policy = jsonencode({
@@ -464,15 +460,12 @@ resource "aws_iam_role_policy_attachment" "nodes-AmazonSSMManagedInstanceCore" {
   role       = aws_iam_role.terraform-eks-nodes-role.name
 }
 
-resource "aws_eks_node_group" "private-nodes" {
+resource "aws_eks_node_group" "private-nodes-app" {
   cluster_name    = aws_eks_cluster.terraform-eks-cluster.name
-  node_group_name = "private-nodes"
+  node_group_name = "${var.cluster-name}-private-nodes-app"
   node_role_arn   = aws_iam_role.terraform-eks-nodes-role.arn
 
-  subnet_ids = concat(
-    aws_subnet.terraform-eks-private-subnet-app[*].id,
-    aws_subnet.terraform-eks-private-subnet-db[*].id
-  )
+  subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-app : subnet.id]
 
   ami_type       = var.ami_type
   capacity_type  = "ON_DEMAND"
@@ -489,7 +482,7 @@ resource "aws_eks_node_group" "private-nodes" {
   }
 
   labels = {
-    role = "general"
+    role = "frontend"
   }
 
   launch_template {
@@ -498,7 +491,7 @@ resource "aws_eks_node_group" "private-nodes" {
   }
 
   tags = {
-    Name = "${var.cluster-name}-eks-cluster-node"
+    Name = "${var.cluster-name}-eks-cluster-node-app"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
     Who = "Me"
   }
@@ -510,6 +503,52 @@ resource "aws_eks_node_group" "private-nodes" {
   ]
 }
 
+# Test another node
+resource "aws_eks_node_group" "private-nodes-db" {
+  cluster_name    = aws_eks_cluster.terraform-eks-cluster.name
+  node_group_name = "${var.cluster-name}-private-nodes-db"
+  node_role_arn   = aws_iam_role.terraform-eks-nodes-role.arn
+
+  subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-db : subnet.id]
+
+
+  ami_type       = var.ami_type
+  capacity_type  = "ON_DEMAND"
+  instance_types = var.instance_types
+
+  scaling_config {
+    desired_size = var.pvt_desired_size
+    max_size     = var.pvt_max_size
+    min_size     = var.pvt_min_size
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  labels = {
+    role = "backend"
+  }
+
+  launch_template {
+    name    = aws_launch_template.terraform-eks-demo.name
+    version = aws_launch_template.terraform-eks-demo.latest_version
+  }
+
+  tags = {
+    Name = "${var.cluster-name}-eks-cluster-node-db"
+    "kubernetes.io/cluster/${var.cluster-name}" = "owned"
+    Who = "Me"
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.nodes-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.nodes-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.nodes-AmazonEC2ContainerRegistryReadOnly,
+  ]
+}
+
+# You don't need this but putting here for reference
 locals {
   demo-node-userdata = <<USERDATA
 MIME-Version: 1.0
@@ -534,7 +573,6 @@ USERDATA
 
 resource "aws_launch_template" "terraform-eks-demo" {
   name = "eks-with-disks"
-#  user_data = "${base64encode(local.demo-node-userdata)}"
 
   block_device_mappings {
     device_name = "/dev/xvdb"
