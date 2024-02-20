@@ -43,7 +43,7 @@ spec:
         tier: mysql
     spec:
       nodeSelector:
-        tier: frontend
+        tier: mysql
       containers:
       - image: mysql:8.0
         name: mysql
