@@ -482,7 +482,7 @@ resource "aws_eks_node_group" "private-nodes-app" {
   }
 
   labels = {
-    role = "frontend"
+    tier = "frontend"
   }
 
   launch_template {
@@ -528,7 +528,7 @@ resource "aws_eks_node_group" "private-nodes-db" {
   }
 
   labels = {
-    role = "backend"
+    tier = "backend"
   }
 
   launch_template {
