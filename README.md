@@ -1,5 +1,5 @@
 # learn-terraform-eks-demo
-how to create policy with assume role
+how to create wordpress with sql using EKS and terraform
 
 # setup aliases
 ```ruby
