@@ -3,8 +3,8 @@
 # Terraform commands
 init:
 	terraform init
-
-plan:
+	terraform fmt
+	terraform validate
 	terraform plan
 
 apply:
@@ -21,7 +21,9 @@ warming:
 k8s-apply:
 	kubectl apply -f mysql-deployment.yaml
 	kubectl apply -f wordpress-deployment.yaml
+	kubectl apply -f wordpress-ingress.yaml
 
 k8s-delete:
 	kubectl delete -f mysql-deployment.yaml
 	kubectl delete -f wordpress-deployment.yaml
+	kubectl delete -f wordpress-ingress.yaml
