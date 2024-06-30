@@ -19,9 +19,9 @@ phases:
   build:
     commands:
       - echo Planning Terraform...
-      - terraform plan -var 'cluster-name=$CLUSTER_NAME'
+      - terraform plan -var cluster-name=$CLUSTER_NAME
       - echo Applying Terraform...
-      - terraform apply --auto-approve -var 'cluster-name=$CLUSTER_NAME'
+      - terraform apply --auto-approve -var cluster-name=$CLUSTER_NAME
       - echo Verify the Cluster
       - kubectl cluster-info
       - echo Applying Kubernetes manifests...
