@@ -10,3 +10,5 @@ Install if running at cloudshell
 ```ruby
 sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo; sudo yum -y install terraform
 ```
+## If you run this using codepipeline. This might help
+https://repost.aws/knowledge-center/eks-api-server-unauthorized-error
