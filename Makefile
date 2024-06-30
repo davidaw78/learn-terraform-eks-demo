@@ -5,6 +5,8 @@ init:
 	terraform init
 	terraform fmt
 	terraform validate
+
+plan:	
 	terraform plan
 
 apply:
