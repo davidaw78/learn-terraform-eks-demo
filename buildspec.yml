@@ -21,7 +21,7 @@ phases:
       - echo Planning Terraform...
       - terraform plan -var cluster-name=$CLUSTER_NAME
       - echo Applying Terraform...
-      - terraform apply --auto-approve -var cluster-name=$CLUSTER_NAME
+      - terraform apply --auto-approve -var cluster-name=$CLUSTER_NAME || export BUILD_FAILED=true
       - echo Verify the Cluster
       - kubectl cluster-info
       - echo Applying Kubernetes manifests...
@@ -31,6 +31,13 @@ phases:
   
   post_build:
     commands:
+      - |
+        if [ "$BUILD_FAILED" == "true" ]; then
+          echo "Build failed, sending alert and triggering destroy"
+          terraform destroy -auto-approve -var cluster-name=$CLUSTER_NAME
+        else
+          echo "Build succeeded"
+        fi
       - echo Build completed on `date`
       - kubectl get secrets -n wordpress --all-namespaces
       - kubectl get pvc -n wordpress --all-namespaces
