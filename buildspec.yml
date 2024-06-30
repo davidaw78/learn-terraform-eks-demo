@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      terraform: latest
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws eks update-kubeconfig --name <your-cluster-name> --region <your-region>
+  build:
+    commands:
+      - echo Initializing Terraform...
+      - make init
+      - echo Planning Terraform...
+      - make plan
+      - echo Applying Terraform...
+      - make apply
+      - echo Applying Kubernetes manifests...
+      - make k8s-apply
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
