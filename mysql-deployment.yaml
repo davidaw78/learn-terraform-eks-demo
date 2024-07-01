@@ -31,6 +31,7 @@ metadata:
   labels:
     app: wordpress
 spec:
+  serviceName: example-service  # <-- Add this field
   selector:
     matchLabels:
       app: wordpress
