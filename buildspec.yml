@@ -22,9 +22,6 @@ phases:
       - terraform plan -var cluster-name=$CLUSTER_NAME
       - echo Applying Terraform...
       - terraform apply --auto-approve -var cluster-name=$CLUSTER_NAME || export BUILD_FAILED=true
-      - echo Verify the Cluster
-      - kubectl cluster-info || export POD_FAILED=true
-      - echo Applying Kubernetes manifests...
       
   post_build:
     commands:
@@ -32,12 +29,15 @@ phases:
         if [ "$BUILD_FAILED" == "true" ]; then
           echo "Build failed, sending alert and triggering destroy"
           terraform destroy -auto-approve -var cluster-name=$CLUSTER_NAME
-          export POD_FAILED=true
+          
         else
           echo "Build succeeded"
-          aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION_NAME
-          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
-          kubectl apply -k ./
+          echo Verify the Cluster
+          kubectl cluster-info || export POD_FAILED=true
+          echo Applying Kubernetes manifests...
+          aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION_NAME || export POD_FAILED=true
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml || export POD_FAILED=true
+          kubectl apply -k ./ || export POD_FAILED=true
         fi
       - |        
         if [ "$POD_FAILED" == "true" ]; then
