@@ -12,3 +12,8 @@ sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo h
 ```
 ## If you run this using codepipeline. This might help
 https://repost.aws/knowledge-center/eks-api-server-unauthorized-error
+
+## Possible to delete cluster
+https://theboreddev.com/how-to-destroy-a-kubernetes-deployment/
+
+https://spacelift.io/blog/kubectl-delete-deployment
