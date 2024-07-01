@@ -27,7 +27,7 @@ phases:
       - echo Applying Kubernetes manifests...
       - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION_NAME
       - kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
-      - kubectl apply -k ./
+      - kubectl apply -k ./ || export POD_FAILED=true
   
   post_build:
     commands:
@@ -38,11 +38,17 @@ phases:
         else
           echo "Build succeeded"
         fi
+        if [ "$POD_FAILED" == "true" ]; then
+          echo "Pod failed, sending alert and triggering destroy"
+          kubectl delete deployment --all --all-namespaces=true
+        else
+          echo "Deployment succeeded"
+          kubectl get secrets -n wordpress --all-namespaces
+          kubectl get pvc -n wordpress --all-namespaces
+          kubectl get all -n wordpress -o wide --all-namespaces
+          kubectl get ingress -n wordpress --all-namespaces
+        fi               
       - echo Build completed on `date`
-      - kubectl get secrets -n wordpress --all-namespaces
-      - kubectl get pvc -n wordpress --all-namespaces
-      - kubectl get all -n wordpress -o wide --all-namespaces
-      - kubectl get ingress -n wordpress --all-namespaces
 
 artifacts:
   files:
