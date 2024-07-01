@@ -29,7 +29,7 @@ phases:
         if [ "$BUILD_FAILED" == "true" ]; then
           echo "Build failed, sending alert and triggering destroy"
           terraform destroy -auto-approve -var cluster-name=$CLUSTER_NAME
-          
+          export POD_FAILED=true          
         else
           echo "Build succeeded"
           echo Verify the Cluster
