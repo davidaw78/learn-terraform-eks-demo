@@ -7,6 +7,7 @@ env:
 phases:
   install:
     commands:
+      - start_time=$(date +%s)      
       - echo Installing Terraform...
       - cat /etc/os-release
       - sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo; sudo yum -y install terraform
@@ -22,7 +23,6 @@ phases:
       - terraform plan -var cluster-name=$CLUSTER_NAME
       - echo Applying Terraform...
       - terraform apply --auto-approve -var cluster-name=$CLUSTER_NAME || export BUILD_FAILED=true
-      
   post_build:
     commands:
       - |
@@ -43,15 +43,18 @@ phases:
         if [ "$POD_FAILED" == "true" ]; then
           echo "Pod failed, sending alert and triggering destroy"
           kubectl delete deployment --all --all-namespaces=true
+          end_time=$(date +%s)      
         else
           echo "Deployment succeeded"
           kubectl get secrets -n wordpress --all-namespaces
           kubectl get pvc -n wordpress --all-namespaces
           kubectl get all -n wordpress -o wide --all-namespaces
           kubectl get ingress -n wordpress --all-namespaces
+          end_time=$(date +%s)      
         fi               
       - echo Build completed on `date`
-
+      - duration=$((end_time - start_time))
+      - echo "Build duration: $duration seconds"
 artifacts:
   files:
     - '**/*'
