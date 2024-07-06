@@ -43,7 +43,6 @@ phases:
         if [ "$POD_FAILED" == "true" ]; then
           echo "Pod failed, sending alert and triggering destroy"
           kubectl delete deployment --all --all-namespaces=true
-          end_time=$(date +%s)      
         else
           echo "Deployment succeeded"
           kubectl get secrets -n wordpress --all-namespaces
@@ -53,8 +52,6 @@ phases:
           end_time=$(date +%s)      
         fi               
       - echo Build completed on `date`
-      - duration=$((end_time - start_time))
-      - echo "Build duration: $duration seconds"
 artifacts:
   files:
     - '**/*'
