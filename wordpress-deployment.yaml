@@ -14,7 +14,7 @@ spec:
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: standard
+  name: standard_wordpress
 provisioner: kubernetes.io/aws-ebs
 parameters:
   type: gp2
@@ -26,7 +26,7 @@ metadata:
   labels:
     app: wordpress
 spec:
-  storageClassName: standard  # Add this line
+  storageClassName: standard_wordpress  # Add this line
   accessModes:
     - ReadWriteOnce
   resources:
