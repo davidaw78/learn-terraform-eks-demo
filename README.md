@@ -17,6 +17,15 @@ cluster_name=$(aws eks list-clusters --query clusters --output text)
 get_region=$(aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]')
 aws eks update-kubeconfig --region $get_region --name $cluster_name
 ```
+## Troubleshooting EKS
+1. CrashLoopBackOff - Pod starting, crashing, and repeating
+```bash
+Increase memory - https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/
+kubectl describe pod/<pod> -n <namespace>
+kubectl logs <pod> -n <namespace>
+Probe failure - No server running or different port number assigned to pod versus inside VM
+kubectl exec -it <pod> -n <namespace> -- bin/bash
+```
 ## If you run this using codepipeline. This might help
 https://repost.aws/knowledge-center/eks-api-server-unauthorized-error
 
