@@ -18,6 +18,8 @@ get_region=$(aws ec2 describe-availability-zones --output text --query 'Availabi
 aws eks update-kubeconfig --region $get_region --name $cluster_name
 ```
 ## Troubleshooting EKS
+Resource - https://komodor.com/wp-content/uploads/2021/11/handbook_k8s_errors.pdf
+
 1. CrashLoopBackOff - Pod starting, crashing, and repeating
 ```bash
 Increase memory - https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/
