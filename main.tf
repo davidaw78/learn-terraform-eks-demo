@@ -305,6 +305,7 @@ resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEKSServic
 resource "aws_eks_cluster" "terraform-eks-cluster" {
   name            = var.cluster-name
   role_arn        = aws_iam_role.terraform-eks-role-cluster.arn
+  version         = var.cluster_version
 
   vpc_config {
     security_group_ids = [
@@ -528,8 +529,7 @@ resource "aws_eks_node_group" "private-nodes-db" {
   node_group_name = "${var.cluster-name}-private-nodes-db"
   node_role_arn   = aws_iam_role.terraform-eks-nodes-role.arn
 
-  subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-db : subnet.id]
-
+  subnet_ids     = [for subnet in aws_subnet.terraform-eks-private-subnet-db : subnet.id]
 
   ami_type       = var.ami_type
   capacity_type  = "ON_DEMAND"
