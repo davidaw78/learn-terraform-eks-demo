@@ -44,3 +44,7 @@ https://repost.aws/knowledge-center/eks-api-server-unauthorized-error
 https://theboreddev.com/how-to-destroy-a-kubernetes-deployment/
 
 https://spacelift.io/blog/kubectl-delete-deployment
+
+How to assign dynamic eks version - https://blog.stackademic.com/create-the-aws-eks-cluster-with-a-managed-node-group-using-custom-launch-templates-185744a0cc79
+
+how to use addons - https://stackoverflow.com/questions/77565939/terraform-to-create-eks-addon-for-vpc-cni-example-of-using-configuration-values
