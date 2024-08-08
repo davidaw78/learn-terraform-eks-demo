@@ -12,7 +12,8 @@ sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo h
 ```
 ## Quickstart
 ```bash
-tfm; tfa -var cluster-name=<anyname>
+tfm; tfa -var cluster-name=<anyname> -var 'availability-zones=["us-east-1a", "us-east-1c"]' -var region="us-east-1"
+
 ```
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml; \
