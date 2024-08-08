@@ -10,6 +10,14 @@ Install if running at cloudshell
 ```ruby
 sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo; sudo yum -y install terraform
 ```
+## Quickstart
+```bash
+tfm; tfa -var cluster-name=<anyname>
+```
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml; \
+kubectl apply -k ./
+```
 ## Run this to run kubectl at cloudshell
 ```bash
 this_account=$(aws sts get-caller-identity --query Account --output text)
