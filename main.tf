@@ -59,6 +59,25 @@ variable "ami_type" {
   default = "AL2_x86_64"
 }
 
+variable "cluster_version" {
+  description = ""
+  type = string
+  default = "1.22"
+}
+
+# VPC CNI Version
+variable "vpc-cni-version" {
+  type        = string
+  description = "VPC CNI Version"
+}
+
+# Kube Proxy Version
+variable "kube-proxy-version" {
+  type        = string
+  description = "Kube Proxy Version"
+}
+
+
 variable "disk_size" {
   description = "Disk size in GiB for nodes."
   type = number
