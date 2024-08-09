@@ -69,12 +69,14 @@ variable "cluster_version" {
 variable "vpc-cni-version" {
   type        = string
   description = "VPC CNI Version"
+  default     = "v1.18.0-eksbuild.1"
 }
 
 # Kube Proxy Version
 variable "kube-proxy-version" {
   type        = string
   description = "Kube Proxy Version"
+  default     =  "v1.27.10-eksbuild.2"
 }
 
 
