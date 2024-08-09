@@ -62,7 +62,7 @@ variable "ami_type" {
 variable "cluster_version" {
   description = ""
   type = string
-  default = "1.22"
+  default = "1.23"
 }
 
 # VPC CNI Version
