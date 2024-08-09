@@ -440,7 +440,7 @@ output "kubeconfig" {
   value = local.kubeconfig
 }
 
-
+/* Remove nodes use fargate
 # Setup Nodes
 resource "aws_iam_role" "terraform-eks-nodes-role" {
   name                = "${var.cluster-name}-eks-group-nodes-role"
@@ -479,25 +479,31 @@ resource "aws_iam_policy" "policy-ec2" {
     ]
   })
 }
+*/
 
-resource "aws_iam_role_policy_attachment" "nodes-AmazonEKSWorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "fargate-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.terraform-eks-nodes-role.name
+  role       = aws_iam_role.terraform-eks-fargate-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "nodes-AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "fargate-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.terraform-eks-nodes-role.name
+  role       = aws_iam_role.terraform-eks-fargate-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "nodes-AmazonEC2ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "fargate-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.terraform-eks-nodes-role.name
+  role       = aws_iam_role.terraform-eks-fargate-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "nodes-AmazonSSMManagedInstanceCore" {
+resource "aws_iam_role_policy_attachment" "fargate-AmazonSSMManagedInstanceCore" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  role       = aws_iam_role.terraform-eks-nodes-role.name
+  role       = aws_iam_role.terraform-eks-fargate-role.name
+}
+
+resource "aws_iam_role_policy_attachment" "fargate-AmazonEKSFargatePodExecutionRolePolicy" {
+  role       = aws_iam_role.terraform-eks-fargate-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
 }
 
 # Define the Fargate profile for the app namespace
@@ -550,11 +556,6 @@ resource "aws_iam_role" "terraform-eks-fargate-role" {
       }
     ]
   })
-}
-
-resource "aws_iam_role_policy_attachment" "fargate-AmazonEKSFargatePodExecutionRolePolicy" {
-  role       = aws_iam_role.terraform-eks-fargate-role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
 }
 
 output "fargate_profile_app" {
