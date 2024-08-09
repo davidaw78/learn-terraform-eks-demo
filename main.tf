@@ -400,7 +400,6 @@ resource "aws_security_group" "terraform-eks-private-facing-sg" {
 locals {
   kubeconfig = <<KUBECONFIG
 
-
 apiVersion: v1
 clusters:
 - cluster:
@@ -655,6 +654,7 @@ resource "aws_eks_node_group" "private-nodes-db" {
   ]
 }
 */
+
 # You don't need this but putting here for reference
 locals {
   demo-node-userdata = <<USERDATA
