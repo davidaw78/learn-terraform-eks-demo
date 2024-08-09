@@ -500,6 +500,72 @@ resource "aws_iam_role_policy_attachment" "nodes-AmazonSSMManagedInstanceCore" {
   role       = aws_iam_role.terraform-eks-nodes-role.name
 }
 
+# Define the Fargate profile for the app namespace
+resource "aws_eks_fargate_profile" "app_profile" {
+  cluster_name = aws_eks_cluster.terraform-eks-cluster.name
+  fargate_profile_name = "${var.cluster-name}-app-profile"
+  pod_execution_role_arn = aws_iam_role.terraform-eks-fargate-role.arn
+
+  subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-app : subnet.id]
+
+  selector {
+    namespace = "app"
+  }
+
+  tags = {
+    Name = "${var.cluster-name}-app-fargate-profile"
+  }
+}
+
+# Define the Fargate profile for the database namespace
+resource "aws_eks_fargate_profile" "db_profile" {
+  cluster_name = aws_eks_cluster.terraform-eks-cluster.name
+  fargate_profile_name = "${var.cluster-name}-db-profile"
+  pod_execution_role_arn = aws_iam_role.terraform-eks-fargate-role.arn
+
+  subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-db : subnet.id]
+
+  selector {
+    namespace = "database"
+  }
+
+  tags = {
+    Name = "${var.cluster-name}-db-fargate-profile"
+  }
+}
+
+# IAM role for Fargate tasks
+resource "aws_iam_role" "terraform-eks-fargate-role" {
+  name = "${var.cluster-name}-fargate-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "eks-fargate-pods.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "fargate-AmazonEKSFargatePodExecutionRolePolicy" {
+  role       = aws_iam_role.terraform-eks-fargate-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
+}
+
+output "fargate_profile_app" {
+  value = aws_eks_fargate_profile.app_profile.arn
+}
+
+output "fargate_profile_db" {
+  value = aws_eks_fargate_profile.db_profile.arn
+}
+
+/* Remove them to replaced fargate
 resource "aws_eks_node_group" "private-nodes-app" {
   cluster_name    = aws_eks_cluster.terraform-eks-cluster.name
   node_group_name = "${var.cluster-name}-private-nodes-app"
@@ -587,7 +653,7 @@ resource "aws_eks_node_group" "private-nodes-db" {
     aws_iam_role_policy_attachment.nodes-AmazonSSMManagedInstanceCore
   ]
 }
-
+*/
 # You don't need this but putting here for reference
 locals {
   demo-node-userdata = <<USERDATA
