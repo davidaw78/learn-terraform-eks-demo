@@ -303,6 +303,21 @@ resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEKSServic
   role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
 }
 
+resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEKSWorkerNodePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
+}
+
+resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
+}
+
+resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonSSMManagedInstanceCore" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
+}
+
 # Setup cluster
 resource "aws_eks_cluster" "terraform-eks-cluster" {
   name            = var.cluster-name
@@ -323,7 +338,10 @@ resource "aws_eks_cluster" "terraform-eks-cluster" {
 
   depends_on = [
     aws_iam_role_policy_attachment.terraform-eks-cluster-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.terraform-eks-cluster-AmazonEKSServicePolicy
+    aws_iam_role_policy_attachment.terraform-eks-cluster-AmazonEKSServicePolicy,
+    aws_iam_role_policy_attachment.terraform-eks-cluster-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.terraform-eks-cluster-AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.terraform-eks-cluster-AmazonSSMManagedInstanceCore
   ]
 }
 
