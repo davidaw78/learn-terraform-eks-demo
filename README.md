@@ -1,6 +1,11 @@
 # learn-terraform-eks-demo
 how to create wordpress with sql using EKS and terraform
 
+## Update the IAM
+```bash
+['arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy', 'arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly']
+```
+
 # setup aliases
 ```ruby
 alias k=kubectl; alias tf="terraform"; alias tfa="terraform apply --auto-approve"; alias tfd="terraform destroy --auto-approve"; alias tfm="terraform init; terraform fmt; terraform validate; terraform plan"
