@@ -15,7 +15,7 @@ sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo h
 cluster_name="your_cluster_name"; \
 az_name="your_az_name"; \
 
-tfm -var cluster-name="${cluster_name}" -var "availability-zones=[\"${az_name}a\", \"${az_name}c\"]" -var region=$az_name;
+tfm -var cluster-name="${cluster_name}" -var "availability-zones=[\"${az_name}a\", \"${az_name}c\"]" -var region=$az_name; \
 tfa -var cluster-name="${cluster_name}" -var "availability-zones=[\"${az_name}a\", \"${az_name}c\"]" -var region=$az_name;
 ```
 ```bash
