@@ -24,7 +24,7 @@ variable "vpc-cidr-block" {
 }
 
 variable "public-subnet-cidr-blocks" {
-  type = list(string)
+  type        = list(string)
   default     = ["10.0.1.0/24", "10.0.2.0/24"]
   description = "CIDR block range for public subnet"
 }
@@ -42,27 +42,27 @@ variable "private-subnet-cidr-blocks-db" {
 }
 
 variable "availability-zones" {
-  type  = list(string)
-  default = ["us-east-1a", "us-east-1b"]
+  type        = list(string)
+  default     = ["us-east-1a", "us-east-1b"]
   description = "List of availability zones for selected region"
 }
 
 variable "instance_types" {
-  type = list(string)
-  default = ["t3.small"]
+  type        = list(string)
+  default     = ["t3.small"]
   description = "Set of instance types associated with the EKS Node Group."
 }
 
 variable "ami_type" {
   description = "Type of Amazon Machine Image (AMI) associated with the EKS Node Group. https://docs.aws.amazon.com/eks/latest/APIReference/API_Nodegroup.html"
-  type = string 
-  default = "AL2_x86_64"
+  type        = string
+  default     = "AL2_x86_64"
 }
 
 variable "cluster_version" {
   description = ""
-  type = string
-  default = "1.23"
+  type        = string
+  default     = "1.23"
 }
 
 # VPC CNI Version
@@ -76,44 +76,44 @@ variable "vpc-cni-version" {
 variable "kube-proxy-version" {
   type        = string
   description = "Kube Proxy Version"
-  default     =  "v1.27.10-eksbuild.2"
+  default     = "v1.27.10-eksbuild.2"
 }
 
 
 variable "disk_size" {
   description = "Disk size in GiB for nodes."
-  type = number
-  default = 8
+  type        = number
+  default     = 8
 }
 
 variable "pvt_desired_size" {
   description = "Desired # of nodes in private subnet"
-  default = 1
-  type = number
+  default     = 1
+  type        = number
 }
 
 variable "pvt_max_size" {
   description = "Maximum # of nodes in private subnet."
-  default = 2
-  type = number
+  default     = 2
+  type        = number
 }
 
 variable "pvt_min_size" {
   description = "Minimum # of nodes in private subnet."
-  default = 1
-  type = number
+  default     = 1
+  type        = number
 }
 
 resource "null_resource" "run-kubectl" {
   provisioner "local-exec" {
-        command = "aws eks update-kubeconfig --region ${var.region}  --name ${var.cluster-name}"
+    command = "aws eks update-kubeconfig --region ${var.region}  --name ${var.cluster-name}"
   }
   depends_on = [resource.aws_eks_fargate_profile.app_profile] # [resource.aws_eks_node_group.private-nodes-app]
 }
 
 resource "null_resource" "run-kubectl1" {
   provisioner "local-exec" {
-        command = <<EOT
+    command = <<EOT
         kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml    
         sleep 60
         kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.27"
@@ -125,8 +125,8 @@ resource "null_resource" "run-kubectl1" {
 
 variable "cluster-name" {
   description = "This will ask you to name the cluster"
-# uncomment this to use default
-#  default = "terraform-eks-demo1"
+  # uncomment this to use default
+  #  default = "terraform-eks-demo1"
 }
 
 variable "region" {
@@ -136,12 +136,12 @@ variable "region" {
 
 # Setup VPC and Subnet
 resource "aws_vpc" "terraform-eks-vpc" {
-  enable_dns_support = true
+  enable_dns_support   = true
   enable_dns_hostnames = true
-  cidr_block = var.vpc-cidr-block
+  cidr_block           = var.vpc-cidr-block
 
   tags = {
-    Name = "${var.cluster-name}-vpc"
+    Name                                        = "${var.cluster-name}-vpc"
     "kubernetes.io/cluster/${var.cluster-name}" = "shared"
   }
 }
@@ -182,8 +182,8 @@ resource "aws_subnet" "terraform-eks-public-subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    "Name" = "${var.cluster-name}-public-subnet"
-    "kubernetes.io/role/elb"     = "1"
+    "Name"                                      = "${var.cluster-name}-public-subnet"
+    "kubernetes.io/role/elb"                    = "1"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
 }
@@ -195,8 +195,8 @@ resource "aws_subnet" "terraform-eks-private-subnet-app" {
   availability_zone = var.availability-zones[count.index]
 
   tags = {
-    Name = "${var.cluster-name}-private-subnet-app"
-    "kubernetes.io/role/internal-elb" = "1"
+    Name                                        = "${var.cluster-name}-private-subnet-app"
+    "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
 }
@@ -208,8 +208,8 @@ resource "aws_subnet" "terraform-eks-private-subnet-db" {
   availability_zone = var.availability-zones[count.index]
 
   tags = {
-    Name = "${var.cluster-name}-private-subnet-db"
-    "kubernetes.io/role/internal-elb" = "1"
+    Name                                        = "${var.cluster-name}-private-subnet-db"
+    "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
 }
@@ -219,8 +219,8 @@ resource "aws_route_table" "terraform-eks-private-app-rt" {
   vpc_id = aws_vpc.terraform-eks-vpc.id
 
   route {
-      cidr_block                 = "0.0.0.0/0"
-      nat_gateway_id             = aws_nat_gateway.terraform-eks-nat.id
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.terraform-eks-nat.id
   }
 
   tags = {
@@ -232,8 +232,8 @@ resource "aws_route_table" "terraform-eks-private-db-rt" {
   vpc_id = aws_vpc.terraform-eks-vpc.id
 
   route {
-      cidr_block                 = "0.0.0.0/0"
-      nat_gateway_id             = aws_nat_gateway.terraform-eks-nat.id
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.terraform-eks-nat.id
   }
 
   tags = {
@@ -246,8 +246,8 @@ resource "aws_route_table" "terraform-eks-public-rt" {
   vpc_id = aws_vpc.terraform-eks-vpc.id
 
   route {
-      cidr_block                 = "0.0.0.0/0"
-      gateway_id                 = aws_internet_gateway.terraform-eks-igw.id
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.terraform-eks-igw.id
   }
 
   tags = {
@@ -256,19 +256,19 @@ resource "aws_route_table" "terraform-eks-public-rt" {
 }
 
 resource "aws_route_table_association" "terraform-eks-public-subnet-rta" {
-  count = length(var.availability-zones)
+  count          = length(var.availability-zones)
   subnet_id      = aws_subnet.terraform-eks-public-subnet[count.index].id
   route_table_id = aws_route_table.terraform-eks-public-rt.id
 }
 
 resource "aws_route_table_association" "terraform-eks-private-subnet-app-rta" {
-  count = length(var.availability-zones)
+  count          = length(var.availability-zones)
   subnet_id      = aws_subnet.terraform-eks-private-subnet-app[count.index].id
   route_table_id = aws_route_table.terraform-eks-private-app-rt.id
 }
 
 resource "aws_route_table_association" "terraform-eks-private-subnet-db-rta" {
-  count = length(var.availability-zones)
+  count          = length(var.availability-zones)
   subnet_id      = aws_subnet.terraform-eks-private-subnet-db[count.index].id
   route_table_id = aws_route_table.terraform-eks-private-db-rt.id
 }
@@ -295,44 +295,44 @@ POLICY
 
 resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
+  role       = aws_iam_role.terraform-eks-role-cluster.name
 }
 
 resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
+  role       = aws_iam_role.terraform-eks-role-cluster.name
 }
 
 resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
+  role       = aws_iam_role.terraform-eks-role-cluster.name
 }
 
 resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
+  role       = aws_iam_role.terraform-eks-role-cluster.name
 }
 
 resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonSSMManagedInstanceCore" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  role       = "${aws_iam_role.terraform-eks-role-cluster.name}"
+  role       = aws_iam_role.terraform-eks-role-cluster.name
 }
 
 # Setup cluster
 resource "aws_eks_cluster" "terraform-eks-cluster" {
-  name            = var.cluster-name
-  role_arn        = aws_iam_role.terraform-eks-role-cluster.arn
-  version         = var.cluster_version
+  name     = var.cluster-name
+  role_arn = aws_iam_role.terraform-eks-role-cluster.arn
+  version  = var.cluster_version
 
   vpc_config {
     security_group_ids = [
       aws_security_group.terraform-eks-private-facing-sg.id
     ]
-    subnet_ids         = [for subnet in aws_subnet.terraform-eks-public-subnet : subnet.id]
+    subnet_ids = [for subnet in aws_subnet.terraform-eks-public-subnet : subnet.id]
   }
-  
+
   tags = {
-    "Name" = "${var.cluster-name}-eks-cluster"
+    "Name"                                      = "${var.cluster-name}-eks-cluster"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
 
@@ -365,7 +365,7 @@ resource "aws_security_group" "terraform-eks-public-facing-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {  
+  tags = {
     Name = "${var.cluster-name}-public-facing-sg"
   }
 }
@@ -378,7 +378,7 @@ resource "aws_security_group" "terraform-eks-private-facing-sg" {
   ingress {
     from_port   = 0
     to_port     = 0
-    protocol  = "tcp"
+    protocol    = "tcp"
     cidr_blocks = flatten([var.private-subnet-cidr-blocks-app, var.private-subnet-cidr-blocks-db])
     # Allow traffic from private subnets
   }
@@ -386,7 +386,7 @@ resource "aws_security_group" "terraform-eks-private-facing-sg" {
   egress {
     from_port   = 0
     to_port     = 0
-    protocol  = "-1"
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -437,18 +437,18 @@ KUBECONFIG
 }
 
 output "kubeconfig" {
-  value = "${local.kubeconfig}"
+  value = local.kubeconfig
 }
 
 
 # Setup Nodes
 resource "aws_iam_role" "terraform-eks-nodes-role" {
-  name = "${var.cluster-name}-eks-group-nodes-role"
+  name                = "${var.cluster-name}-eks-group-nodes-role"
   managed_policy_arns = [aws_iam_policy.policy-ec2.arn]
 
   assume_role_policy = jsonencode({
     Statement = [{
-      Action: [
+      Action : [
         "sts:AssumeRole",
       ]
       Effect = "Allow"
@@ -467,12 +467,12 @@ resource "aws_iam_policy" "policy-ec2" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action   = [
-        "ec2:CreateVolume",
-        "ec2:CreateTags",
-        "ec2:DescribeVolume",
-        "ec2:AttachVolume"
-       ]
+        Action = [
+          "ec2:CreateVolume",
+          "ec2:CreateTags",
+          "ec2:DescribeVolume",
+          "ec2:AttachVolume"
+        ]
         Effect   = "Allow"
         Resource = "*"
       },
@@ -502,8 +502,8 @@ resource "aws_iam_role_policy_attachment" "nodes-AmazonSSMManagedInstanceCore" {
 
 # Define the Fargate profile for the app namespace
 resource "aws_eks_fargate_profile" "app_profile" {
-  cluster_name = aws_eks_cluster.terraform-eks-cluster.name
-  fargate_profile_name = "${var.cluster-name}-app-profile"
+  cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
+  fargate_profile_name   = "${var.cluster-name}-app-profile"
   pod_execution_role_arn = aws_iam_role.terraform-eks-fargate-role.arn
 
   subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-app : subnet.id]
@@ -519,8 +519,8 @@ resource "aws_eks_fargate_profile" "app_profile" {
 
 # Define the Fargate profile for the database namespace
 resource "aws_eks_fargate_profile" "db_profile" {
-  cluster_name = aws_eks_cluster.terraform-eks-cluster.name
-  fargate_profile_name = "${var.cluster-name}-db-profile"
+  cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
+  fargate_profile_name   = "${var.cluster-name}-db-profile"
   pod_execution_role_arn = aws_iam_role.terraform-eks-fargate-role.arn
 
   subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-db : subnet.id]
