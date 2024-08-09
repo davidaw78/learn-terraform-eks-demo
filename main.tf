@@ -629,3 +629,27 @@ resource "aws_launch_template" "terraform-eks-demo" {
     }
   }
 }
+
+# Create CloudWatch Log Group for VPC Flow Logs
+resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
+  name = "${var.cluster-name}-vpc-flow-logs"
+  
+  retention_in_days = 7 # Optional: Define retention policy (7 days here)
+  
+  tags = {
+    Name = "${var.cluster-name}-vpc-flow-logs"
+  }
+}
+
+# Create VPC Flow Log
+resource "aws_flow_log" "vpc_flow_log" {
+  log_group_name = aws_cloudwatch_log_group.vpc_flow_logs.name
+  traffic_type    = "ALL" # Can be "ACCEPT", "REJECT", or "ALL"
+
+  vpc_id = aws_vpc.terraform-eks-vpc.id
+
+  depends_on = [
+    aws_cloudwatch_log_group.vpc_flow_logs
+  ]
+}
+
