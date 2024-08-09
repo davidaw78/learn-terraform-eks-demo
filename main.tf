@@ -643,7 +643,7 @@ resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
 
 # Create VPC Flow Log
 resource "aws_flow_log" "vpc_flow_log" {
-  log_group_name = aws_cloudwatch_log_group.vpc_flow_logs.name
+  log_destination = aws_cloudwatch_log_group.vpc_flow_logs.name
   traffic_type    = "ALL" # Can be "ACCEPT", "REJECT", or "ALL"
 
   vpc_id = aws_vpc.terraform-eks-vpc.id
