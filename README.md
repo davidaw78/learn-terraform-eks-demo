@@ -53,3 +53,5 @@ How to assign dynamic eks version - https://blog.stackademic.com/create-the-aws-
 https://www.fairwinds.com/blog/guide-securely-upgrading-eks-clusters
 
 how to use addons - https://stackoverflow.com/questions/77565939/terraform-to-create-eks-addon-for-vpc-cni-example-of-using-configuration-values
+
+how to join nodes to cluster - https://repost.aws/knowledge-center/eks-worker-nodes-cluster
