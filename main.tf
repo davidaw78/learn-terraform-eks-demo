@@ -545,7 +545,7 @@ resource "aws_eks_fargate_profile" "nginx_profile" {
   fargate_profile_name   = "${var.cluster-name}-nginx-profile"
   pod_execution_role_arn = aws_iam_role.terraform-eks-fargate-role.arn
 
-  subnet_ids = [for subnet in aws_subnet.terraform-eks-public-subnet-app : subnet.id]
+  subnet_ids = [for subnet in aws_subnet.terraform-eks-public-subnet : subnet.id]
 
   selector {
     namespace = "ingress-nginx"
