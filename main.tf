@@ -539,6 +539,20 @@ resource "aws_eks_fargate_profile" "db_profile" {
   }
 }
 
+resource "aws_eks_fargate_profile" "kube-system" {
+  cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
+  fargate_profile_name   = "kube-system"
+  pod_execution_role_arn = aws_iam_role.terraform-eks-fargate-role.arn
+
+  # These subnets must have the following resource tag: 
+  # kubernetes.io/cluster/<CLUSTER_NAME>.
+  subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-app : subnet.id]
+
+  selector {
+    namespace = "kube-system"
+  }
+}
+
 # IAM role for Fargate tasks
 resource "aws_iam_role" "terraform-eks-fargate-role" {
   name = "${var.cluster-name}-fargate-role"
