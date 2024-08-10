@@ -53,6 +53,12 @@ https://theboreddev.com/how-to-destroy-a-kubernetes-deployment/
 
 https://spacelift.io/blog/kubectl-delete-deployment
 
+## Allow fargate to be used for ingress-nginx
+```bash
+
+```
+https://github.com/kubernetes/ingress-nginx/issues/4888
+
 How to assign dynamic eks version - https://blog.stackademic.com/create-the-aws-eks-cluster-with-a-managed-node-group-using-custom-launch-templates-185744a0cc79
 
 https://www.fairwinds.com/blog/guide-securely-upgrading-eks-clusters
