@@ -539,6 +539,23 @@ resource "aws_eks_fargate_profile" "db_profile" {
   }
 }
 
+# Define the Fargate profile for the ingress-nginx namespace
+resource "aws_eks_fargate_profile" "nginx_profile" {
+  cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
+  fargate_profile_name   = "${var.cluster-name}-nginx-profile"
+  pod_execution_role_arn = aws_iam_role.terraform-eks-fargate-role.arn
+
+  subnet_ids = [for subnet in aws_subnet.terraform-eks-public-subnet-app : subnet.id]
+
+  selector {
+    namespace = "ingress-nginx"
+  }
+
+  tags = {
+    Name = "${var.cluster-name}-nginx-fargate-profile"
+  }
+}
+
 resource "aws_eks_fargate_profile" "kube-system" {
   cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
   fargate_profile_name   = "kube-system"
