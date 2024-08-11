@@ -30,6 +30,7 @@ spec:
         app: wordpress
         tier: frontend
     spec:
+      schedulerName: fargate-scheduler
       # Ensure that the Pod can run on Fargate by tolerating the Fargate taint
       tolerations:
       - key: "eks.amazonaws.com/compute-type"
