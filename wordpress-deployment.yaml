@@ -52,7 +52,7 @@ spec:
           value: wordpress
         ports:
         - containerPort: 80
-          name: Wordpress
+          name: wordpress
         volumeMounts:
         - name: efs-storage
           mountPath: /var/www/html
