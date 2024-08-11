@@ -1,5 +1,7 @@
 # learn-terraform-eks-demo
-how to create wordpress with sql using EKS and terraform
+how to create wordpress with sql using EKS, fargate and terraform
+
+how can I use this to recreate - https://aws.amazon.com/blogs/containers/running-stateful-workloads-with-amazon-eks-on-aws-fargate-using-amazon-efs/
 
 ## Update the IAM
 ```bash
