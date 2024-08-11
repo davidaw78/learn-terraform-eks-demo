@@ -104,6 +104,7 @@ variable "pvt_min_size" {
   type = number
 }
 
+/* Remove private node
 resource "null_resource" "run-kubectl" {
   provisioner "local-exec" {
         command = "aws eks update-kubeconfig --region ${var.region}  --name ${var.cluster-name}"
@@ -122,6 +123,7 @@ resource "null_resource" "run-kubectl1" {
   }
   depends_on = [resource.null_resource.run-kubectl]
 }
+*/
 
 variable "cluster-name" {
   description = "This will ask you to name the cluster"
