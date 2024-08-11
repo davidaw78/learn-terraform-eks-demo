@@ -7,7 +7,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
     kubectl = {
       source  = "gavinbunney/kubectl"
@@ -78,7 +78,6 @@ variable "kube-proxy-version" {
   description = "Kube Proxy Version"
   default     = "v1.27.10-eksbuild.2"
 }
-
 
 variable "disk_size" {
   description = "Disk size in GiB for nodes."
