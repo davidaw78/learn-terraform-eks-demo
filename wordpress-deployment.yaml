@@ -37,7 +37,8 @@ spec:
         value: "fargate"
         effect: "NoSchedule"
       nodeSelector:
-        app: wordpress    
+        topology.kubernetes.io/region: "ap-southeast-1"
+        app: wordpress   
       containers:
       - image: wordpress:6.2.1-apache
         name: wordpress
