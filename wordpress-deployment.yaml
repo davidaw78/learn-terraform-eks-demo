@@ -37,8 +37,10 @@ spec:
         value: "fargate"
         effect: "NoSchedule"
       nodeSelector:
-        topology.kubernetes.io/zone: "ap-southeast-1a"
-        app: wordpress   
+      - key: "topology.kubernetes.io/zone"
+        value: "ap-southeast-1a"
+      - key: "app"
+        value: "wordpress"
       containers:
       - image: wordpress:6.2.1-apache
         name: wordpress
