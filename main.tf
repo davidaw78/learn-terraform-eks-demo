@@ -509,6 +509,7 @@ resource "aws_iam_role_policy_attachment" "fargate-AmazonEKSFargatePodExecutionR
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
 }
 
+/* Remove extra fargate profile
 # Define the Fargate profile for the app namespace
 resource "aws_eks_fargate_profile" "app_profile" {
   cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
@@ -565,6 +566,7 @@ resource "aws_eks_fargate_profile" "nginx_profile" {
     Name = "${var.cluster-name}-nginx-fargate-profile"
   }
 }
+*/
 
 resource "aws_eks_fargate_profile" "kube-system" {
   cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
