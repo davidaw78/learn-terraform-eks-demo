@@ -308,6 +308,11 @@ resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEKSWorker
   role       = aws_iam_role.terraform-eks-role-cluster.name
 }
 
+resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonSSMManagedInstanceCore" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.terraform-eks-role-cluster.name
+}
+
 resource "aws_iam_role_policy_attachment" "terraform-eks-cluster-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.terraform-eks-role-cluster.name
