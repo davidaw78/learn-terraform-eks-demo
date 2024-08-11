@@ -18,10 +18,10 @@ sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo h
 ## Quickstart
 ```bash
 cluster_name="your_cluster_name"; \
-az_name="your_az_name"; \
+region_code="your_az_name"; \
 
-tfm -var cluster-name="${cluster_name}" -var "availability-zones=[\"${az_name}a\", \"${az_name}c\"]" -var region=$az_name; \
-tfa -var cluster-name="${cluster_name}" -var "availability-zones=[\"${az_name}a\", \"${az_name}c\"]" -var region=$az_name;
+tfm -var cluster-name="${cluster_name}" -var "availability-zones=[\"${region_code}a\", \"${region_code}c\"]" -var region=$region_code; \
+tfa -var cluster-name="${cluster_name}" -var "availability-zones=[\"${region_code}a\", \"${region_code}c\"]" -var region=$region_code;
 ```
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml; \
@@ -31,8 +31,8 @@ kubectl apply -k ./
 ```bash
 this_account=$(aws sts get-caller-identity --query Account --output text)
 cluster_name=$(aws eks list-clusters --query clusters --output text)
-get_region=$(aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]')
-aws eks update-kubeconfig --region $get_region --name $cluster_name
+region_code=$(aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]')
+aws eks update-kubeconfig --region $region_code --name $cluster_name
 ```
 ## Troubleshooting EKS
 Resource - https://komodor.com/wp-content/uploads/2021/11/handbook_k8s_errors.pdf
