@@ -514,7 +514,7 @@ resource "aws_eks_fargate_profile" "app_profile" {
   subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-app : subnet.id]
 
   selector {
-    namespace = "wordpress"
+    namespace = "default"
     labels = {
       app = "wordpress"
     }
@@ -534,7 +534,7 @@ resource "aws_eks_fargate_profile" "db_profile" {
   subnet_ids = [for subnet in aws_subnet.terraform-eks-private-subnet-db : subnet.id]
 
   selector {
-    namespace = "wordpress-mysql"
+    namespace = "default"
     labels = {
       app = "wordpress"
     }
