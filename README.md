@@ -3,6 +3,8 @@ how to create wordpress with sql using EKS, fargate and terraform
 
 how can I use this to recreate - https://aws.amazon.com/blogs/containers/running-stateful-workloads-with-amazon-eks-on-aws-fargate-using-amazon-efs/
 
+how to use efs in eks - https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html
+
 ## Update the IAM
 ```bash
 ['arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy', 'arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly']
