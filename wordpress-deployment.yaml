@@ -37,8 +37,6 @@ spec:
         operator: "Equal"
         value: "fargate"
         effect: "NoSchedule"
-      nodeSelector:
-        tier: frontend   
       containers:
       - image: wordpress:6.2.1-apache
         name: wordpress
