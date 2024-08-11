@@ -1,5 +1,9 @@
 # learn-terraform-eks-demo
 how to create wordpress with sql using EKS and terraform
+## Restart deployment
+```bash
+kubectl rollout restart deploy deployment -n namespace
+```
 
 ## Update the IAM
 ```bash
