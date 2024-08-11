@@ -52,4 +52,45 @@ spec:
           value: wordpress
         ports:
         - containerPort: 80
-          name: wordpress
+          name: Wordpress
+        volumeMounts:
+        - name: efs-storage
+          mountPath: /var/www/html
+      volumes:
+      - name: efs-storage
+        persistentVolumeClaim:
+          claimName: efs-pvc
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /  # Path in the EFS filesystem
+    server: <EFS_DNS_NAME>  # Replace with your EFS DNS name
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: efs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: efs-sc
