@@ -30,6 +30,12 @@ spec:
         app: wordpress
         tier: frontend
     spec:
+      # Ensure that the Pod can run on Fargate by tolerating the Fargate taint
+      tolerations:
+      - key: "eks.amazonaws.com/compute-type"
+        operator: "Equal"
+        value: "fargate"
+        effect: "NoSchedule"
       nodeSelector:
         app: wordpress    
       containers:
