@@ -40,7 +40,7 @@ metadata:
   labels:
     app: wordpress
 spec:
-  serviceName: example-service  # <-- Add this field
+  serviceName: wordpress-mysql
   selector:
     matchLabels:
       app: wordpress
