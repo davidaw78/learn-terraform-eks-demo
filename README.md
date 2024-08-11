@@ -72,3 +72,7 @@ how to upgrade - https://medium.com/@phil16terpasetheo/upgrading-your-eks-cluste
 https://marcincuber.medium.com/amazon-eks-upgrade-journey-from-1-22-to-1-23-3b9eaa8c57de
 
 https://www.reddit.com/r/kubernetes/comments/193y624/upgrading_aws_eks_cluster_from_eks_version_121_to/
+
+https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html
+
+https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html
