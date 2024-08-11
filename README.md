@@ -66,3 +66,9 @@ how to use addons - https://stackoverflow.com/questions/77565939/terraform-to-cr
 how to join nodes to cluster - https://repost.aws/knowledge-center/eks-worker-nodes-cluster
 
 AWSSupport-TroubleshootEKSWorkerNode - https://docs.aws.amazon.com/systems-manager-automation-runbooks/latest/userguide/automation-awssupport-troubleshooteksworkernode.html
+
+how to upgrade - https://medium.com/@phil16terpasetheo/upgrading-your-eks-cluster-from-1-22-b927e08007e0
+
+https://marcincuber.medium.com/amazon-eks-upgrade-journey-from-1-22-to-1-23-3b9eaa8c57de
+
+https://www.reddit.com/r/kubernetes/comments/193y624/upgrading_aws_eks_cluster_from_eks_version_121_to/
