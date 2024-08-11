@@ -38,7 +38,7 @@ spec:
         value: "fargate"
         effect: "NoSchedule"
       nodeSelector:
-        app: wordpress   
+        tier: frontend   
       containers:
       - image: wordpress:6.2.1-apache
         name: wordpress
