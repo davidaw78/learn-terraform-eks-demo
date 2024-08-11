@@ -62,7 +62,7 @@ variable "ami_type" {
 variable "cluster_version" {
   description = ""
   type        = string
-  default     = "1.23"
+  default     = "1.25"
 }
 
 # VPC CNI Version
@@ -510,7 +510,6 @@ resource "aws_iam_role_policy_attachment" "fargate-AmazonEKSFargatePodExecutionR
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
 }
 
-/* Remove extra fargate profile
 # Define the Fargate profile for the app namespace
 resource "aws_eks_fargate_profile" "app_profile" {
   cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
@@ -551,6 +550,7 @@ resource "aws_eks_fargate_profile" "db_profile" {
   }
 }
 
+/* Remove extra fargate profile
 # Define the Fargate profile for the ingress-nginx namespace
 resource "aws_eks_fargate_profile" "nginx_profile" {
   cluster_name           = aws_eks_cluster.terraform-eks-cluster.name
