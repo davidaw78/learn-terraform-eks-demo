@@ -37,7 +37,7 @@ spec:
         value: "fargate"
         effect: "NoSchedule"
       nodeSelector:
-        app: wordpress
+        tier: mysql
       containers:
       - image: mysql:8.0
         name: mysql
