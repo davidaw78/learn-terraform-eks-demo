@@ -516,7 +516,7 @@ resource "aws_eks_fargate_profile" "app_profile" {
   selector {
     namespace = "default"
     labels = {
-      app = "wordpress"
+      tier = "frontend"
     }
   }
 
@@ -536,7 +536,7 @@ resource "aws_eks_fargate_profile" "db_profile" {
   selector {
     namespace = "default"
     labels = {
-      app = "wordpress"
+      tier = "mysql"
     }
   }
 
