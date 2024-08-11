@@ -11,27 +11,46 @@ spec:
     app: wordpress
     tier: frontend
 ---
+apiVersion: storage.k8s.io/v1beta1
+kind: CSIDriver
+metadata:
+  name: els.csi.aws.com
+spec:
+  attachedRequire: false
+---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: standard-wordpress
-provisioner: kubernetes.io/aws-ebs
-parameters:
-  type: gp2
+provisioner: efs.csi.aws.com
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: wp-pv-claim
+spec:
+  capacity:
+    storage: 20Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-wordpress
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: $WOF_EFS_FS_ID:: $WOF_EFS_AP
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: wp-pv-claim
-  labels:
-    app: wordpress
+  name: wordpress-efs-uploads-pvc
 spec:
-  storageClassName: standard-wordpress
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
+  storageClassName: standard-wordpress
   resources:
     requests:
-      storage: 20Gi
+      storage: 25Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
