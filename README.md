@@ -36,7 +36,6 @@ aws eks update-kubeconfig --region $region_code --name $cluster_name
 ```
 ## Troubleshooting EKS
 Resource - https://komodor.com/wp-content/uploads/2021/11/handbook_k8s_errors.pdf
-
 1. CrashLoopBackOff - Pod starting, crashing, and repeating
 ```bash
 Increase memory - https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/
@@ -44,6 +43,7 @@ kubectl describe pod/<pod> -n <namespace>
 kubectl logs <pod> -n <namespace>
 Probe failure - No server running or different port number assigned to pod versus inside VM
 kubectl exec -it <pod> -n <namespace> -- bin/bash
+kubectl get events --sort-by='.lastTimestamp'
 ```
 ## If you run this using codepipeline. This might help
 https://repost.aws/knowledge-center/eks-api-server-unauthorized-error
