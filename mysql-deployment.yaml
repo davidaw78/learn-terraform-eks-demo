@@ -30,7 +30,8 @@ spec:
         tier: mysql
     spec:
       nodeSelector:
-        tier: mysql
+      - key: "topology.kubernetes.io/zone"
+        value: "ap-southeast-1a"
       containers:
       - image: mysql:8.0
         name: mysql
