@@ -29,8 +29,15 @@ spec:
         app: wordpress
         tier: mysql
     spec:
+      schedulerName: fargate-scheduler
+      # Ensure that the Pod can run on Fargate by tolerating the Fargate taint
+      tolerations:
+      - key: "eks.amazonaws.com/compute-type"
+        operator: "Equal"
+        value: "fargate"
+        effect: "NoSchedule"
       nodeSelector:
-        tier: mysql
+        app: wordpress
       containers:
       - image: mysql:8.0
         name: mysql
