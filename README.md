@@ -18,7 +18,7 @@ sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo h
 ## Quickstart
 ```bash
 cluster_name="your_cluster_name"; \
-region_code="your_az_name"; \
+region_code=$(aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]') \
 
 tfm -var cluster-name="${cluster_name}" -var "availability-zones=[\"${region_code}a\", \"${region_code}c\"]" -var region=$region_code; \
 tfa -var cluster-name="${cluster_name}" -var "availability-zones=[\"${region_code}a\", \"${region_code}c\"]" -var region=$region_code;
