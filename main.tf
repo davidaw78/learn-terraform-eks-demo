@@ -102,7 +102,7 @@ variable "pvt_min_size" {
   default     = 1
   type        = number
 }
-
+/*
 resource "null_resource" "run-kubectl" {
   provisioner "local-exec" {
     command = "aws eks update-kubeconfig --region ${var.region}  --name ${var.cluster-name}"
@@ -121,6 +121,7 @@ resource "null_resource" "run-kubectl1" {
   }
   depends_on = [resource.null_resource.run-kubectl]
 }
+*/
 
 variable "cluster-name" {
   description = "This will ask you to name the cluster"
@@ -600,6 +601,7 @@ resource "aws_iam_role" "terraform-eks-fargate-role" {
   })
 }
 
+/*
 output "fargate_profile_app" {
   value = aws_eks_fargate_profile.app_profile.arn
 }
@@ -607,6 +609,7 @@ output "fargate_profile_app" {
 output "fargate_profile_db" {
   value = aws_eks_fargate_profile.db_profile.arn
 }
+*/
 
 /* Remove them to replaced fargate
 resource "aws_eks_node_group" "private-nodes-app" {
