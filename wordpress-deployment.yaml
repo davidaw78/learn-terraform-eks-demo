@@ -56,10 +56,10 @@ spec:
         volumeMounts:
         - name: efs-storage
           mountPath: /var/www/html
-      volumes:
-      - name: efs-storage
-        persistentVolumeClaim:
-          claimName: efs-pvc
+        volumes:
+        - name: efs-storage
+          persistentVolumeClaim:
+            claimName: efs-pvc
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -81,7 +81,7 @@ spec:
     - ReadWriteMany
   nfs:
     path: /  # Path in the EFS filesystem
-    server: <EFS_DNS_NAME>  # Replace with your EFS DNS name
+    server: somewhere  # Replace with your EFS DNS name
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
