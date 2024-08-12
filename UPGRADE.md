@@ -20,6 +20,7 @@ aws --profile assume_role  eks update-kubeconfig --region $get_region --name $cl
 ```bash
 kubectl version; kubectl get nodes \
 kubectl get psp eks.privileged
+kubectl describe pod/aws-load-balancer-controller-****** -n kube-system | grep Image:
 ```
 Do not proceed if you encounter
 ```bash
