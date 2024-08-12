@@ -2,7 +2,11 @@
 https://docs.aws.amazon.com/eks/latest/userguide/update-cluster.html
 - [ ] 1. Check kubectl version
 - [ ] 2. Check the kubectl get nodes
-- [ ] 3. Check 
+- [ ] 3. Check aws load balancer controller - https://hub.docker.com/r/amazon/aws-alb-ingress-controller/tags
+- [ ] 4. Check coredns - https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html#updating-coredns-add-on
+- [ ] 5. Check vpc cni - https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html
+- [ ] 6. Upgrade cluster
+- [ ] 7. Reboot node
 ```bash
 this_account=$(aws sts get-caller-identity --query Account --output text)
 cluster_name=$(aws eks list-clusters --query clusters --output text)
@@ -20,7 +24,8 @@ aws --profile assume_role  eks update-kubeconfig --region $get_region --name $cl
 ```bash
 kubectl version; kubectl get nodes \
 kubectl get psp eks.privileged
-kubectl describe pod/aws-load-balancer-controller-****** -n kube-system | grep Image:
+kubectl describe deploy -n kube-system | grep Image:
+kubectl describe daemonset aws-node --namespace kube-system | grep amazon-k8s-cni: | cut -d : -f 3
 ```
 Do not proceed if you encounter
 ```bash
