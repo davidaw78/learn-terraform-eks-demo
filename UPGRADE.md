@@ -21,6 +21,24 @@ aws configure --profile assume_role set aws_session_token $AWS_SESSION_TOKEN
 aws configure --profile assume_role get region
 aws --profile assume_role  eks update-kubeconfig --region $get_region --name $cluster_name
 ```
+Restart node script
+```bash
+#!/bin/bash
+
+# Define the namespace
+NAMESPACE="platform-service"
+
+# Get all deployments in the specified namespace
+DEPLOYMENTS=$(kubectl get deployments -n $NAMESPACE -o jsonpath='{.items[*].metadata.name}')
+
+# Loop through each deployment and restart it
+for DEPLOYMENT in $DEPLOYMENTS; do
+  echo "Rolling out deployment: $DEPLOYMENT"
+  kubectl rollout restart deploy $DEPLOYMENT -n $NAMESPACE
+done
+
+echo "All deployments in the namespace $NAMESPACE have been restarted."
+```
 ```bash
 kubectl version; kubectl get nodes \
 kubectl get psp eks.privileged
