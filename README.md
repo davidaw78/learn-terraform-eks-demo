@@ -35,7 +35,7 @@ kubectl apply -k ./
 ```bash
 cluster_name=$(aws eks list-clusters --query clusters --output text)
 region_code=$(aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]')
-aws eks update-cluster-version --region $region-code --name $cluster_name --kubernetes-version 1.30
+aws eks update-cluster-version --region $region_code --name $cluster_name --kubernetes-version 1.30
 ```
 ## Run this to run kubectl at cloudshell
 ```bash
