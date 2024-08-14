@@ -31,6 +31,12 @@ tfa -var cluster-name="${cluster_name}" -var "availability-zones=[\"${region_cod
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml; \
 kubectl apply -k ./
 ```
+## Run this to upgrade EKS
+```bash
+cluster_name=$(aws eks list-clusters --query clusters --output text)
+region_code=$(aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]')
+aws eks update-cluster-version --region $region-code --name $cluster_name --kubernetes-version 1.30
+```
 ## Run this to run kubectl at cloudshell
 ```bash
 this_account=$(aws sts get-caller-identity --query Account --output text)
